@@ -14,11 +14,26 @@ OPENAI_API_KEY=YOUR_KEY_HERE
 
 Alternatively, you may pass these values as env variables when running a command.
 
-Done. Now, you can proofread text files.
+Done. Now, you can proofread text files via `pedantify -w ./README.md`
 
+Run `pedantify -h` for more info:
 ```sh
-# Will proofread file and write result back to file
-pedantify ./README.md -w
+Usage: pedantify [options] <file>
+
+Fix typos, grammar and style errors in target text file
+
+Example:
+  # Proofread a file and write result back to file
+  pedantify -w ./README.md
+  # Proofread a file and print in console a fixed text
+  pedantify ./README.md
+
+Arguments:
+  file         Text file path
+
+Options:
+  -w, --write  Write output to file. If not enabled, content will only be printed in stdout (default: false)
+  -h, --help   display help for command
 ```
 
 # License
