@@ -1,7 +1,7 @@
 {
 	"name": "pedantify",
 	"description": "LLM proofreader",
-	"version": "0.0.2",
+	"version": "1.0.0",
 	"license": "MIT",
 	"author": "Robert Vitonsky <https://vitonsky.net>",
 	"homepage": "https://github.com/primebitsorg/proofreader",
