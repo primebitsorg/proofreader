@@ -1,13 +1,9 @@
-/* eslint-disable import/no-named-as-default-member */
 import { deleteAsync } from 'del';
 import gulp from 'gulp';
 import cleanPackageJson from 'gulp-clean-package';
 import gulpSourceMaps from 'gulp-sourcemaps';
 import gulpTypescript from 'gulp-typescript';
 import mergeStream from 'merge-stream';
-
-import babel from 'gulp-babel';
-import sourcemaps from 'gulp-sourcemaps';
 
 const buildDir = 'dist';
 
@@ -48,26 +44,6 @@ function buildESM() {
 	]);
 }
 
-function makeCJSFromESM() {
-	const esm = buildDir;
-	const out = `${buildDir}/cjs`;
-
-	return mergeStream(
-		// Copy type declarations
-		gulp.src([`${esm}/**/*.ts`]),
-		// Convert to CJS
-		gulp
-			.src([`${esm}/**/*.js`])
-			.pipe(sourcemaps.init())
-			.pipe(
-				babel({
-					plugins: ['@babel/plugin-transform-modules-commonjs'],
-				}),
-			)
-			.pipe(sourcemaps.write()),
-	).pipe(gulp.dest(out));
-}
-
 function copyMetaFiles() {
 	return mergeStream(
 		// Clean package.json
@@ -76,15 +52,13 @@ function copyMetaFiles() {
 				publicProperties: ['publishConfig'],
 				additionalProperties: {
 					bin: {
-						pedantify: './cjs/bin/pedantify.js',
+						pedantify: './bin/pedantify.js',
 					},
 				},
 			}),
 		),
 		// Copy other
 		gulp.src(['README.md', 'LICENSE']),
-		// Copy bin directory
-		gulp.src('bin/**/**', { base: '.' }),
 	).pipe(gulp.dest(buildDir));
 }
 
@@ -93,6 +67,6 @@ function clean() {
 }
 
 // Compilations
-const fullBuild = gulp.series([clean, copyMetaFiles, buildESM(), makeCJSFromESM]);
+const fullBuild = gulp.series([clean, copyMetaFiles, buildESM()]);
 
 export default fullBuild;
