@@ -1,22 +1,27 @@
 // eslint.config.js
+import { globalIgnores } from 'eslint/config';
 import importPlugin from 'eslint-plugin-import';
 import unusedImports from 'eslint-plugin-unused-imports';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import prettier from 'eslint-config-prettier';
-
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import { readFileSync } from 'fs';
 
-// Use ignore rules from `.prettierignore`
-readFileSync('.prettierignore', { encoding: 'utf8' })
-	.split('\n')
-	.filter((rule) => rule && !rule.startsWith('#'));
+const readLinesInFile = (file) => readFileSync(file, { encoding: 'utf8' }).split('\n');
 
 export default tseslint.config(
 	eslint.configs.recommended,
 	tseslint.configs.recommended,
 	tseslint.configs.recommendedTypeChecked,
+	globalIgnores([
+		'**/*.test.ts',
+		// Use ignore rules from `.prettierignore`
+		...readLinesInFile('.prettierignore').filter(
+			(rule) => rule && !rule.startsWith('#'),
+		),
+	]),
+
 	{
 		files: ['**/*.ts', '**/*.tsx'],
 		languageOptions: {
@@ -118,5 +123,16 @@ export default tseslint.config(
 			],
 		},
 	},
+
+	// Prevent conflicts with perrier
 	prettier,
+
+	// Pure JS
+	{
+		files: ['**/*.js', '*.{js,mjs,cjs}'],
+		extends: [tseslint.configs.disableTypeChecked],
+		rules: {
+			'@typescript-eslint/no-require-imports': 'off',
+		},
+	},
 );
