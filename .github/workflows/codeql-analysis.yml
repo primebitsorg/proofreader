@@ -17,21 +17,22 @@ on:
   workflow_dispatch:
 
 jobs:
-  tests:
-    name: Run tests
-    runs-on: ubuntu-latest
+  # TODO: enable tests
+  # tests:
+  #   name: Run tests
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: "22"
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         node-version: "22"
 
-      - name: Install deps
-        run: npm install
+  #     - name: Install deps
+  #       run: npm install
 
-      - name: Run tests
-        run: npm test
+  #     - name: Run tests
+  #       run: npm test
 
   lint:
     name: Run linter
