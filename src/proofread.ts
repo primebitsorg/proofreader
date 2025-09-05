@@ -12,9 +12,22 @@ export default (getConfig: ConfigProvider) => {
 	const command = new Command();
 
 	command
-		.description('Proofread for Markdown posts')
-		.argument('<file>', 'Markdown file path')
-		.option('-w, --write', 'Write output to file', false)
+		.description(
+			[
+				'Fix typos, grammar and style errors in target text file\n',
+				'Example:',
+				'  # Proofread a file and write result back to file',
+				'  pedantify -w ./README.md',
+				'  # Proofread a file and print in console a fixed text',
+				'  pedantify ./README.md',
+			].join('\n'),
+		)
+		.argument('<file>', 'Text file path')
+		.option(
+			'-w, --write',
+			'Write output to file. If not enabled, content will only be printed in stdout',
+			false,
+		)
 		.action(async (...args) => {
 			const [file, opts] = z
 				.tuple([
