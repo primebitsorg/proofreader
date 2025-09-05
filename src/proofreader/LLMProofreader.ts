@@ -1,7 +1,7 @@
 import OpenAI from 'openai';
 import { ChatCompletionMessageParam } from 'openai/resources';
 
-import { Proofreader } from './Proofreader';
+import type { Proofreader } from './Proofreader';
 
 export class LLMProofreader implements Proofreader {
 	constructor(
