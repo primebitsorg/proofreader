@@ -35,7 +35,7 @@ jobs:
   #       run: npm test
 
   lint:
-    name: Run linter
+    name: Lint and test
     runs-on: ubuntu-latest
 
     steps:
@@ -49,6 +49,9 @@ jobs:
 
       - name: Lint code
         run: npm run lint
+
+      - name: Run tests
+        run: npm test
 
   build:
     name: Build code
