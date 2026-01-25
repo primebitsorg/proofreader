@@ -123,3 +123,33 @@ test('Print content', async () => {
 
 	expect(memfs.vol.readFileSync(filePath, { encoding: 'utf8' })).toBe(fileText);
 });
+
+test('Use custom prompt when provided via flag --prompt', async () => {
+	const filePath = '/var/file.txt';
+	const fileText = 'Hello world';
+	memfs.vol.fromJSON({
+		[filePath]: fileText,
+	});
+
+	CompletionMock.mockReturnValueOnce(Promise.resolve(createCompletion('Updated text')));
+
+	const { default: proofreadCommand } = await import('./proofread');
+	await proofreadCommand(() => ({
+		token: 'API_TOKEN',
+		model: 'MODEL_NAME',
+		baseUrl: 'BASE_URL',
+	})).parseAsync(['-w', '-p', 'Custom user prompt', filePath], { from: 'user' });
+
+	expect(CompletionMock).toBeCalledWith(
+		expect.objectContaining({
+			model: 'MODEL_NAME',
+			messages: [
+				{ content: expect.any(String), role: 'system' },
+				{ content: 'Custom user prompt', role: 'system' },
+				{ content: fileText, role: 'user' },
+			],
+		}),
+	);
+
+	expect(memfs.vol.readFileSync(filePath, { encoding: 'utf8' })).toBe('Updated text');
+});
