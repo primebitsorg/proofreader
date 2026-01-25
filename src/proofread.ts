@@ -28,12 +28,14 @@ export default (getConfig: ConfigProvider) => {
 			'Write output to file. If not enabled, content will only be printed in stdout',
 			false,
 		)
+		.option('-p, --prompt <TEXT>', 'Add instructions for text processing')
 		.action(async (...args) => {
 			const [file, opts] = z
 				.tuple([
 					z.string().min(1),
 					z.object({
 						write: z.boolean(),
+						prompt: z.string().optional(),
 					}),
 				])
 				.rest(z.any())
@@ -64,6 +66,14 @@ export default (getConfig: ConfigProvider) => {
 						You must not never move a dot inside quotemark like that \`"foo bar."\` as fix for \`"foo bar".\`
 						`,
 						},
+						...(opts.prompt
+							? ([
+									{
+										role: 'system',
+										content: opts.prompt,
+									},
+								] as const)
+							: []),
 					],
 				},
 			);

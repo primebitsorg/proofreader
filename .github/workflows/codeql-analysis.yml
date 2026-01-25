@@ -2,40 +2,32 @@ name: "CodeQL"
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [master]
     types: [opened, synchronize, reopened]
   pull_request_review:
     types: [submitted]
-  schedule:
-    # At 04:35 AM, every 3 days
-    # test expression on https://crontab.cronhub.io/
-    - cron: "35 4 */3 * *"
-
   workflow_dispatch:
 
 jobs:
-  # TODO: enable tests
-  # tests:
-  #   name: Run tests
-  #   runs-on: ubuntu-latest
+  tests:
+    name: Run tests
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - uses: actions/setup-node@v2
-  #       with:
-  #         node-version: "22"
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "22"
 
-  #     - name: Install deps
-  #       run: npm install
+      - name: Install deps
+        run: npm install
 
-  #     - name: Run tests
-  #       run: npm test
+      - name: Run tests
+        run: npm test
 
   lint:
-    name: Run linter
+    name: Lint and test
     runs-on: ubuntu-latest
 
     steps:

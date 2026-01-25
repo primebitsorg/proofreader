@@ -1,7 +1,7 @@
 {
 	"name": "pedantify",
 	"description": "LLM proofreader",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"license": "MIT",
 	"author": "Robert Vitonsky <https://vitonsky.net>",
 	"homepage": "https://github.com/primebitsorg/proofreader",
@@ -49,6 +49,7 @@
 		"husky": "^9.1.7",
 		"jsdom": "^26.1.0",
 		"lint-staged": "^16.1.2",
+		"memfs": "^4.56.10",
 		"merge-stream": "^2.0.0",
 		"npm-check-updates": "^18.0.1",
 		"prettier": "^3.6.2",
