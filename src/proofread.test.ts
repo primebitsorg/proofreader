@@ -56,7 +56,7 @@ beforeEach(() => {
 	CompletionMock.mockClear();
 });
 
-test('Write content', async () => {
+test('Write content when flag -w is provided', async () => {
 	const filePath = '/var/file.txt';
 	const fileText = 'Hello world';
 	memfs.vol.fromJSON({
@@ -87,7 +87,39 @@ test('Write content', async () => {
 		}),
 	);
 
-	expect(memfs.vol.readFileSync(filePath, { encoding: 'utf8' })).toEqual(
-		'Updated text',
+	expect(memfs.vol.readFileSync(filePath, { encoding: 'utf8' })).toBe('Updated text');
+});
+
+test('Print content', async () => {
+	const filePath = '/var/file.txt';
+	const fileText = 'Hello world';
+	memfs.vol.fromJSON({
+		[filePath]: fileText,
+	});
+
+	CompletionMock.mockReturnValueOnce(Promise.resolve(createCompletion('Updated text')));
+
+	const { default: proofreadCommand } = await import('./proofread');
+	await proofreadCommand(() => ({
+		token: 'API_TOKEN',
+		model: 'MODEL_NAME',
+		baseUrl: 'BASE_URL',
+	})).parseAsync([filePath], { from: 'user' });
+
+	expect(OpenAIMock).toBeCalledWith({
+		apiKey: 'API_TOKEN',
+		baseURL: 'BASE_URL',
+	});
+
+	expect(CompletionMock).toBeCalledWith(
+		expect.objectContaining({
+			model: 'MODEL_NAME',
+			messages: [
+				{ content: expect.any(String), role: 'system' },
+				{ content: fileText, role: 'user' },
+			],
+		}),
 	);
+
+	expect(memfs.vol.readFileSync(filePath, { encoding: 'utf8' })).toBe(fileText);
 });
